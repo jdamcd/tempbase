@@ -9,7 +9,7 @@ Logs timestamped temperature readings to a Firebase database at a set interval.
 
 #### Parameters
 
-`SSID` & `PASSWORD` are the WiFi credentials.  `INTERVAL` is the measurement frquency (default is 5 mins).
+`SSID` & `PASSWORD` are the WiFi credentials.  `INTERVAL` is the measurement frquency (default is 20 mins).
 
 ##### Firebase
   

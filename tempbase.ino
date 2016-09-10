@@ -20,37 +20,44 @@ char bodyBuffer[100];
 DHT dht(DHTPIN, DHTTYPE);
 
 #define LED 6
-#define INTERVAL 5 * 60 * 1000 // 5 mins
+#define INTERVAL 20 * 60 * 1000 // 20 mins
 
 void setup() {
   pinMode(LED, OUTPUT);
   Serial.begin(9600);
-  while (!Serial) ;
+  // while (!Serial);
 
+  connectWiFi();
+  syncRtc();
+  Serial.println("RTC sync complete");
+}
+
+void connectWiFi() {
+  status = WiFi.status();
   while (status != WL_CONNECTED) {
     Serial.println("Connecting to WiFi");
     status = WiFi.begin(SSID, PASSWORD);
   }
-  Serial.println("Connected");
-  syncRtc();
-  Serial.println("RTC sync complete");
+  Serial.println("WiFi connected");
 }
 
 void loop() {
   digitalWrite(LED, HIGH);
 
+  connectWiFi();
   client.connect(HOST, 443);
   delay(1000);
   if (!client.connected()) {
-    Serial.println("\nError connecting");
+    Serial.println("Error connecting to host");
   } else {
-    Serial.println("\nMeasuring");
+    Serial.println("Measuring");
     int temp = dht.readTemperature();
     int humidity = dht.readHumidity();
     sendData(temp, humidity);
     client.stop();
   }
 
+  WiFi.disconnect();
   digitalWrite(LED, LOW);
   delay(INTERVAL);
 }
